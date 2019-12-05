@@ -59,4 +59,22 @@ defmodule AdventTest do
     assert 610 == Paths.min_cross_by_wire(p1, p2)
   end
 
+  test "check if a string is non-decreasing" do
+    assert Passwords.non_decreasing("122345")
+    assert not Passwords.non_decreasing("122343")
+  end
+
+  test "check if a string has repeating digits" do
+    assert Passwords.has_repeating_digit("111111")
+    assert not Passwords.has_repeating_digit("123456")
+  end
+
+  test "check for repetitions of length exactly two" do
+    assert not Passwords.has_repetition_of_length_exactly_two("123456")
+    assert Passwords.has_repetition_of_length_exactly_two("112233")
+    assert not Passwords.has_repetition_of_length_exactly_two("444123")
+    assert not Passwords.has_repetition_of_length_exactly_two("123444")
+    assert Passwords.has_repetition_of_length_exactly_two("111122")
+  end
+
 end
