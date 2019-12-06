@@ -77,4 +77,14 @@ defmodule AdventTest do
     assert Passwords.has_repetition_of_length_exactly_two("111122")
   end
 
+  test "opcode and mode parsing" do
+    input = "1002"
+    {opcode, modes} = Opcode.parse_opcode(input)
+    assert 2 == opcode
+    assert 2 == Opcode.arity(opcode)
+    assert 0 == Opcode.operand_mode(modes, 0)
+    assert 1 == Opcode.operand_mode(modes, 1)
+    assert 0 == Opcode.operand_mode(modes, 2)
+  end
+
 end

@@ -42,10 +42,10 @@ defmodule Mix.Tasks.Two do
   def recurse(_, tokens, goal, limit, x, y), do: search(tokens, goal, limit, x + 1, y)
 
   def process(s) do
-    tokens = String.split(s, ",") |> Enum.map(&String.to_integer/1)
-    processed = Opcode.apply_op(tokens, 0)
-    IO.puts(Enum.at(processed, 0))
-    Enum.at(processed, 0)
+    tokens = Opcode.parse_program(s)
+    result = Opcode.run_program(tokens)
+    IO.puts(result)
+    result
   end
 
   def load_and_process(s) do
