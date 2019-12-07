@@ -22,7 +22,8 @@ defmodule Opcode do
   defp apply_op(tokens, index, 2, modes), do: apply_binary_op(tokens, index, 2, modes)
 
   defp apply_op(tokens, index, 3, _) do
-    input = IO.gets("Enter a number: ")
+    input = IoAgent.get()#IO.gets("Enter a number: ")
+    #IO.puts("READ #{input}")
     result = String.to_integer(String.trim(input))
     result_index = Enum.fetch!(tokens, index + 1)
     #IO.puts("<< Storing #{result} to index #{result_index}")
@@ -32,7 +33,7 @@ defmodule Opcode do
   defp apply_op(tokens, index, 4, _) do
     result_index = Enum.fetch!(tokens, index + 1)
     output = Enum.fetch!(tokens, result_index)
-    IO.puts(">> #{output}")
+    OutputAgent.set(output)
     new_apply_op(tokens, index + 2)
   end
 

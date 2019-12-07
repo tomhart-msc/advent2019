@@ -87,4 +87,14 @@ defmodule AdventTest do
     assert 0 == Opcode.operand_mode(modes, 2)
   end
 
+  test "pipeline optimization" do
+    {:ok, pid} = IoAgent.start_link("Hi")
+    {:ok, pid2} = OutputAgent.start_link("Hi")
+    s = "3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0"
+    best = Pipeline.find_best(Opcode.parse_program(s), ["0", "1", "2", "3", "4"])
+    assert best == 43210
+    Agent.stop(pid2)
+    Agent.stop(pid)
+  end
+
 end
