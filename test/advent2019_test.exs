@@ -78,7 +78,7 @@ defmodule AdventTest do
   end
 
   test "opcode and mode parsing" do
-    input = "1002"
+    input = 1002
     {opcode, modes} = Opcode.parse_opcode(input)
     assert 2 == opcode
     assert 2 == Opcode.arity(opcode)

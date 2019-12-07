@@ -2,11 +2,11 @@ defmodule Opcode do
   @operators %{1 => &+/2, 2 => &*/2, 7 => &Opcode.lessOp/2, 8 => &Opcode.equalsOp/2, 99 => :halt}
   @arities %{1 => 2, 2 => 2, 3 => 1, 4 => 1, 5 => 2, 6 => 2, 7 => 2, 8 => 2, 99 => 0}
 
-  def parse_program(s), do: String.split(s, ",")
+  def parse_program(s), do: String.split(s, ",") |> Enum.map(&String.to_integer/1)
 
   def run_program(list) do
     processed = new_apply_op(list, 0)
-    String.to_integer(Enum.at(processed, 0))
+    Enum.at(processed, 0)
   end
 
   def apply_op(tokens, index) do
@@ -23,15 +23,15 @@ defmodule Opcode do
 
   defp apply_op(tokens, index, 3, _) do
     input = IO.gets("Enter a number: ")
-    result = String.trim(input)
-    result_index = String.to_integer(Enum.fetch!(tokens, index + 1))
+    result = String.to_integer(String.trim(input))
+    result_index = Enum.fetch!(tokens, index + 1)
     #IO.puts("<< Storing #{result} to index #{result_index}")
     new_apply_op(List.replace_at(tokens, result_index, result), index + 2)
   end
 
   defp apply_op(tokens, index, 4, _) do
     result_index = Enum.fetch!(tokens, index + 1)
-    output = Enum.fetch!(tokens, String.to_integer(result_index))
+    output = Enum.fetch!(tokens, result_index)
     IO.puts(">> #{output}")
     new_apply_op(tokens, index + 2)
   end
@@ -68,19 +68,19 @@ defmodule Opcode do
     #IO.puts("Applying op #{opcode} at index #{index}")
     operand1 = argument(tokens, index, 0, modes)
     operand2 = argument(tokens, index, 1, modes)
-    result_index = String.to_integer(Enum.fetch!(tokens, index + 3))
+    result_index = Enum.fetch!(tokens, index + 3)
     operator = operator(opcode)
-    result = Integer.to_string(operator.(operand1, operand2))
+    result = operator.(operand1, operand2)
     #IO.puts("Storing #{result} at index #{result_index}")
     new_apply_op(List.replace_at(tokens, result_index, result), index + 4)
   end
 
   defp argument(tokens, index, arg_num, 0) do
-    x = String.to_integer(Enum.fetch!(tokens, index + arg_num + 1))
-    String.to_integer(Enum.fetch!(tokens, x))
+    x = Enum.fetch!(tokens, index + arg_num + 1)
+    Enum.fetch!(tokens, x)
   end
   defp argument(tokens, index, arg_num, 1) do
-    String.to_integer(Enum.fetch!(tokens, index + arg_num + 1))
+    Enum.fetch!(tokens, index + arg_num + 1)
   end
   defp argument(tokens, index, arg_num, modes) when is_binary(modes) do
     mode = operand_mode(modes, arg_num)
@@ -88,7 +88,7 @@ defmodule Opcode do
   end
 
   # Gets the opcode as an integer, and a string representing the modes of its operands
-  def parse_opcode(op), do: do_parse_opcode(String.reverse(op))
+  def parse_opcode(op), do: do_parse_opcode(String.reverse(Integer.to_string(op)))
   defp do_parse_opcode(<<_>> = op), do: {String.to_integer(op), ""}
   defp do_parse_opcode(<<_, _>> = op), do: {String.to_integer(op), ""}
   defp do_parse_opcode(<<e, d, cba :: binary>>), do: {String.to_integer(<<d, e>>), cba}
