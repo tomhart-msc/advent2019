@@ -97,4 +97,10 @@ defmodule AdventTest do
     Agent.stop(pid)
   end
 
+  test "stacking SIF images" do
+    s = "0222112222120000"
+    layers = SIF.layers(s, 2, 2)
+    assert "0110" == SIF.stack(layers)
+  end
+
 end
